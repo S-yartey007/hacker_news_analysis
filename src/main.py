@@ -1,7 +1,10 @@
 import csv
+from datetime import datetime
+import math
 header = list()
 data = list()
 
+#Read csv file and extract data
 with open("data/hacker_news.csv", "r", encoding="utf-8") as f:
     reader = csv.reader(f)
     header= next(reader)
@@ -9,23 +12,66 @@ with open("data/hacker_news.csv", "r", encoding="utf-8") as f:
     for row in reader:
         data.append(row)
 
+#Extract show hn posts and ask hn posts
 show_hn_posts = [row for row in data if row[1].lower().startswith("show hn") ]
 ask_hn_posts = [row for row in data if row[1].lower().startswith("ask hn") ]
-print("show_hn_list", len(show_hn_posts))
-print("ask_hn_list", len(ask_hn_posts))
 
-ask_comments_num = 0
+#Calculate sum of comments for posts
+def sum_of_comments(posts):
+    comments_total = 0
+    for row in posts:
+        comments_total += int(row[4])
+    return comments_total
 
-for row in ask_hn_posts:
-    ask_comments_num += int(row[4])
+#Calculate avg number of comments for posts
+def avg_num_of_comments(posts):
+    if len(posts) > 0:
+        avg_comments_num  = sum_of_comments(posts)/ len(posts)
+        return avg_comments_num
+    else:
+        return 0
 
-if len(ask_hn_posts) > 0:
-    avg_ask_comments_num  = ask_comments_num / len(ask_hn_posts)
-else:
-    avg_ask_comments_num = 0
 
-print("ask_comments_num", ask_comments_num)
-print("avg_ask_comments_num", avg_ask_comments_num)
+print("total number of ask hn comments", sum_of_comments(ask_hn_posts))
+print("average number of ask hn comments", avg_num_of_comments(ask_hn_posts))
+print("total number of show hn comments", sum_of_comments(show_hn_posts))
+print("average number of show hn comments", avg_num_of_comments(show_hn_posts))
+
+#Analyse time of posts
+def analyze_times_of_post(posts):
+    count = {}
+    total = {}
+    for row in posts:
+        dt = datetime.strptime(row[6], "%m/%d/%Y %H:%M")
+        hour = dt.hour
+        comment_num = row[4]
+        if hour not in count:
+            count[hour] = 0
+        if hour not in total:
+            total[hour] = 0
+        count[hour] += 1
+        total[hour] += int(comment_num)
+
+    avg_dic = {}
+    for hour,cnt  in count.items():
+        avg_dic[hour] = total[hour]/ count[hour]
+
+    return [(hour,avg) for hour, avg in avg_dic.items()]
+
+
+avg_comments_per_hour = analyze_times_of_post(ask_hn_posts)
+sorted_avg_comments_per_hour = sorted(avg_comments_per_hour,key=lambda x: x[1], reverse=True)
+top_5 = sorted_avg_comments_per_hour[:5]
+print("Top 5 hours for maximum engagements comments")
+for i, item in enumerate(top_5):
+    if len(str(item[0])) == 2:
+            print(f"{i+1}. {item[0]}:00   {math.trunc(item[1])} comments")
+    else:
+            print(f"{i+1}. 0{item[0]}:00   {math.trunc(item[1])} comments")
+
+
+
+
 
 
 
