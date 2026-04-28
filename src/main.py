@@ -59,15 +59,20 @@ def analyze_times_of_post(posts):
     return [(hour,avg) for hour, avg in avg_dic.items()]
 
 
-avg_comments_per_hour = analyze_times_of_post(ask_hn_posts)
-sorted_avg_comments_per_hour = sorted(avg_comments_per_hour,key=lambda x: x[1], reverse=True)
-top_5 = sorted_avg_comments_per_hour[:5]
-print("Top 5 hours for maximum engagements comments")
-for i, item in enumerate(top_5):
-    if len(str(item[0])) == 2:
-            print(f"{i+1}. {item[0]}:00   {math.trunc(item[1])} comments")
-    else:
-            print(f"{i+1}. 0{item[0]}:00   {math.trunc(item[1])} comments")
+avg_ask_hn_comments_per_hour = analyze_times_of_post(ask_hn_posts)
+sorted_avg_ask_hn_comments_per_hour = sorted(avg_ask_hn_comments_per_hour,key=lambda x: x[1], reverse=True)
+top_5_ask_hn = sorted_avg_ask_hn_comments_per_hour[:5]
+print("Top 5 hours for maximum ask hacker news engagements")
+for i, item in enumerate(top_5_ask_hn):
+            print(f"{i+1}. {item[0]:02d}:00   {round(item[1],1)} comments")
+
+
+avg_show_hn_comments_per_hour = analyze_times_of_post(show_hn_posts)
+sorted_avg_show_hn_comments_per_hour = sorted(avg_show_hn_comments_per_hour,key=lambda x: x[1], reverse=True)
+top_5_show_hn = sorted_avg_show_hn_comments_per_hour[:5]
+print("Top 5 hours for maximum show hacker news engagements")
+for i, item in enumerate(top_5_show_hn):
+            print(f"{i+1}. {item[0]:02d}:00   {round(item[1],1)} comments")
 
 
 
