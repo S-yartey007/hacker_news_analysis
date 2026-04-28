@@ -124,6 +124,6 @@ The dataset contains Hacker News posts with the following fields:
 
 ## 📎 Author
 
--Emmanuel Yartey
--Computer Science & Mathematics Student
--Interested in Backend Engineering, AI, and Data Science
+- Emmanuel Yartey
+- Computer Science & Mathematics Student
+- Interested in Backend Engineering, AI, and Data Science
